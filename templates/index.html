@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wine Quality Prediction</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style></style>
+</head>
+<body>
+    <div class="container">
+        <h1>Wine Quality Prediction</h1>
+        <!-- div for prediction text -->
+            {% if prediction_text %}
+                <div class="text-center pb-4">
+                    {% if prediction_text == 'Predicted wine quality: Good' %}
+                        <h2 class="text-success">{{ prediction_text }}</h2>
+                    {% else %}
+                        <h2 class="text-danger">{{ prediction_text }}</h2>
+                    {% endif %}
+                </div>
+            {% endif %}
+        <form action="/predict" method="post">
+            <div class="row">
+            {%for i in range(1, 12)%}
+                <div class="col-md-4 mb-3">
+                    <div class="mb-3">
+                        <label for="feature{{ i }}" class="form-label">
+                            {{ featuresLabel[i-1] }}:
+                        </label>
+                        <input type="range" class="form-control-range" id="feature{{ i }}" name="feature{{ i }}"  
+                        min="{{ min_values[i-1] }}" max="{{ max_values[i-1] }}" 
+                        value="{{ defaultValues[i-1] }}" step="{{ steps[i-1] }}" class="form-range"
+                        oninput="changeValue('{{ i }}')">
+                        <span id="value{{ i }}"></span>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+            <div class="text-center">
+                <input type="submit" class="btn btn-success" value="Predict">
+            </div>
+        </form>
+    
+    </div>
+    
+    <script>
+        for (var i = 1; i <= 11; i++) {
+            var slider = document.getElementById("feature" + i);
+            var output = document.getElementById("value" + i);
+            output.innerHTML = slider.value;
+            // slider.oninput = function() {
+            //     output.innerHTML = this.value;
+            // }
+        }
+        function changeValue(id) {
+            var slider = document.getElementById("feature"+id);
+            var output = document.getElementById("value"+id);
+            output.innerText = slider.value;
+        }
+    </script>
+    
+    
+</body>
+</html>
